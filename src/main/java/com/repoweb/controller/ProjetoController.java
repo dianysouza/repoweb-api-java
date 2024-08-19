@@ -1,5 +1,6 @@
 package com.repoweb.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,13 @@ public class ProjetoController {
     @Autowired
 	private IProjetoRepository projetoRepository;
 	
-	@RequestMapping(value = "/cadastraProjeto", method =  RequestMethod.POST)
+	@RequestMapping(value = "/projetos", method =  RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Projeto salvarProjeto(@RequestBody @Valid Projeto projeto) {
 		return projetoRepository.save(projeto);
 	}
 
-	@RequestMapping(value = "/visualizaProjeto/{id}", method=RequestMethod.GET)
+	@RequestMapping(value = "/projetos/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Projeto> visualizarProjeto(@PathVariable(value = "id") long id) {
 		Optional<Projeto> projeto = projetoRepository.findById(id);
         if(projeto.isPresent()) {
@@ -38,6 +39,12 @@ public class ProjetoController {
         else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@RequestMapping(value = "projetos", method = RequestMethod.GET)
+	public ResponseEntity<List<Projeto>> listarProjetos() {
+		List<Projeto> projeto = projetoRepository.findAll();
+		return new ResponseEntity<>(projeto, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/atualizaAcessos/{id}", method = RequestMethod.PUT)
@@ -60,7 +67,7 @@ public class ProjetoController {
 		}
 	}
 
-	@RequestMapping(value = "/removeProjeto/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value = "/projetos/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Projeto> removeProjeto (@PathVariable(value = "id") long id) {
 		Optional<Projeto> projeto = projetoRepository.findById(id);
 		if(projeto.isPresent()) {
